@@ -43,7 +43,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-200"
+    >
       <div className="max-w-2xl mx-auto p-6 space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">
