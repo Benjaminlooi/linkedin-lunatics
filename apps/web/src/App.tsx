@@ -12,7 +12,7 @@ function App() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${process.env.API_URL}/api/generate`,
+        `${import.meta.env.VITE_API_URL}/api/generate`,
         {
           content,
         }
