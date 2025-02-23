@@ -1,22 +1,94 @@
-import { useState } from 'react'
-import './App.css'
-
+import { useState } from "react";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import ReactMarkdown from "react-markdown";
 function App() {
-  const [count, setCount] = useState(0)
+  const [content, setContent] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [generatedPost, setGeneratedPost] = useState("");
+
+  const handleGenerate = async () => {
+    try {
+      setIsLoading(true)
+      const response = await axios.post('/api/generate', {
+        content
+      })
+      
+      setGeneratedPost(response.data.post)
+      
+    } catch (error) {
+      console.error("Error generating post:", error);
+      // Handle error appropriately
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatText = (text) => {
+    return text.split("\n\n");
+  };
 
   return (
-    <div className="App">
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto p-6 space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Viral LinkedIn Post Generator
+          </h1>
+          <h2 className="text-2xl font-semibold text-gray-700">
+            Create Engaging Content in Seconds
+          </h2>
+          <p className="text-gray-600">
+            Turn your expertise into compelling LinkedIn posts that resonate with your audience and spark meaningful conversations
+          </p>
+        </div>
+
+        <div className="space-y-4 bg-white p-6 rounded-lg shadow-sm">
+          <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's your story? Share a challenge you overcame, a lesson you learned, or an insight that changed your perspective..."
+            className="min-h-[120px] resize-none"
+          />
+
+          <div className="flex">
+            <Button
+              className="flex-1"
+              onClick={handleGenerate}
+              size="lg"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="mr-2">Generating...</span>
+              ) : (
+                <>
+                  <span className="mr-2">✨</span>
+                  Generate Post
+                </>
+              )}
+            </Button>
+          </div>
+
+          {generatedPost && (
+            <div className="mt-8 space-y-4">
+              <h3 className="text-lg font-semibold">Generated Post:</h3>
+              <div className="bg-gray-50 p-6 rounded-lg whitespace-pre-wrap font-mono text-sm leading-none">
+                {formatText(generatedPost).map((part, index) => (
+                  <>
+                    <p key={index}>
+                      <ReactMarkdown>{part}</ReactMarkdown>
+                    </p>
+                    <br />
+                  </>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App 
+export default App;
