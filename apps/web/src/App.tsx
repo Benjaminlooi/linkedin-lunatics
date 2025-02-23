@@ -7,21 +7,32 @@ function App() {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
+  const [remainingAttempts, setRemainingAttempts] = useState(() => {
+    const stored = localStorage.getItem("remainingAttempts");
+    return stored ? parseInt(stored, 10) : 5; // Default to 5 if not set
+  });
 
   const handleGenerate = async () => {
+    if (remainingAttempts <= 0) {
+      alert("You have reached your maximum number of generations.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/generate`,
-        {
-          content,
-        }
+        { content }
       );
 
       setGeneratedPost(response.data.post);
+
+      // Update remaining attempts
+      const newAttempts = remainingAttempts - 1;
+      setRemainingAttempts(newAttempts);
+      localStorage.setItem("remainingAttempts", newAttempts.toString());
     } catch (error) {
       console.error("Error generating post:", error);
-      // Handle error appropriately
     } finally {
       setIsLoading(false);
     }
@@ -60,7 +71,7 @@ function App() {
               className="flex-1"
               onClick={handleGenerate}
               size="lg"
-              disabled={isLoading}
+              disabled={isLoading || remainingAttempts <= 0}
             >
               {isLoading ? (
                 <span className="mr-2">Generating...</span>
@@ -71,6 +82,10 @@ function App() {
                 </>
               )}
             </Button>
+          </div>
+
+          <div className="text-sm text-gray-500 text-center">
+            {remainingAttempts} generations remaining
           </div>
 
           {generatedPost && (
