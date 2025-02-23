@@ -3,6 +3,8 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ReactMarkdown from "react-markdown";
+import Header from "@/components/header";
+
 function App() {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,7 @@ function App() {
     <div
       className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-200"
     >
+      <Header />
       <div className="max-w-2xl mx-auto p-6 space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">
