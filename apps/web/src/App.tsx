@@ -10,13 +10,15 @@ function App() {
 
   const handleGenerate = async () => {
     try {
-      setIsLoading(true)
-      const response = await axios.post('/api/generate', {
-        content
-      })
-      
-      setGeneratedPost(response.data.post)
-      
+      setIsLoading(true);
+      const response = await axios.post(
+        `${process.env.API_URL}/api/generate`,
+        {
+          content,
+        }
+      );
+
+      setGeneratedPost(response.data.post);
     } catch (error) {
       console.error("Error generating post:", error);
       // Handle error appropriately
@@ -40,7 +42,8 @@ function App() {
             Create Engaging Content in Seconds
           </h2>
           <p className="text-gray-600">
-            Turn your expertise into compelling LinkedIn posts that resonate with your audience and spark meaningful conversations
+            Turn your expertise into compelling LinkedIn posts that resonate
+            with your audience and spark meaningful conversations
           </p>
         </div>
 
